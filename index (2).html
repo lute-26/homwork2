@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>림버스 컴퍼니 관리자 입문용 용어 사전</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        limbus: {
+                            red: '#c02626',
+                            brightRed: '#ff3b3b',
+                            gold: '#d4af37',
+                            darkGold: '#aa820a',
+                            bg: '#0f0f12',
+                            panel: '#18181f',
+                            cardBg: '#1f1f28',
+                            border: '#333342'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0b0e;
+            color: #e2e8f0;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(192, 38, 38, 0.15), transparent 70%),
+                linear-gradient(to bottom, rgba(15, 15, 18, 0.8), rgba(11, 11, 14, 0.98));
+            background-attachment: fixed;
+        }
+
+        /* Limbus style scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111116;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3a1515;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c02626;
+        }
+
+        /* Glow effects */
+        .gold-glow {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+        }
+        .red-glow {
+            box-shadow: 0 0 15px rgba(192, 38, 38, 0.3);
+        }
+        .red-border-glow {
+            border-color: rgba(255, 59, 59, 0.5);
+            box-shadow: inset 0 0 10px rgba(192, 38, 38, 0.2);
+        }
+
+        /* Custom toggle button active styles */
+        .tab-btn.active {
+            background-color: #c02626;
+            color: #ffffff;
+            border-color: #ff3b3b;
+            box-shadow: 0 0 10px rgba(192, 38, 38, 0.5);
+        }
+
+        /* Card highlight overlay */
+        .limbus-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .limbus-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #c02626, #d4af37, #c02626);
+            opacity: 0.6;
+        }
+        .limbus-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 12px rgba(192, 38, 38, 0.3);
+        }
+
+        /* Scanline effect for Project Moon vibe */
+        .scanline {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0, 0, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0.3)
+            );
+            background-size: 100% 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-limbus-red selection:text-white">
+
+    <!-- Top Header -->
+    <header class="sticky top-0 z-50 bg-limbus-bg/95 backdrop-blur-md border-b border-limbus-border shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-limbus-red to-black flex items-center justify-center border border-limbus-gold shadow-md">
+                    <i class="fa-solid fa-compass-drafting text-limbus-gold text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                        <span>LIMBUS COMPANY</span>
+                        <span class="text-xs bg-limbus-red text-white px-2 py-0.5 rounded uppercase tracking-wider font-semibold">신입 관리자용</span>
+                    </h1>
+                    <p class="text-xs text-gray-400">쉽고 재미있게 배우는 버스 탑승 가이드</p>
+                </div>
+            </div>
+
+            <!-- Quick Action Buttons -->
+            <div class="flex items-center space-x-2">
+                <button onclick="openModal('sim-modal')" class="px-3 py-1.5 text-xs md:text-sm bg-limbus-panel hover:bg-limbus-border text-limbus-gold border border-limbus-gold/50 rounded-lg transition-all flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span class="hidden sm:inline">합/정신력</span> 체험기
+                </button>
+                <button onclick="openModal('quiz-modal')" class="px-3 py-1.5 text-xs md:text-sm bg-limbus-red hover:bg-red-700 text-white rounded-lg transition-all flex items-center gap-1.5 font-bold shadow red-glow">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>퀴즈 테스트</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+        
+        <!-- Welcome Hero Banner -->
+        <section class="relative bg-gradient-to-r from-red-950/40 via-limbus-panel to-neutral-900 border border-limbus-red/40 rounded-2xl p-5 md:p-8 mb-8 overflow-hidden shadow-2xl">
+            <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none text-9xl text-limbus-red">
+                <i class="fa-solid fa-skull"></i>
+            </div>
+            
+            <div class="relative z-10 max-w-3xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-red-950/60 border border-red-800/80 rounded-full text-red-300 text-xs font-semibold mb-3">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                    <span>림버스 컴퍼니 시스템 완벽 입문 가이드</span>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-black text-white mb-2 leading-tight">
+                    림버스 컴퍼니 핵심 용어 및 전투 시스템 🚌💥
+                </h2>
+                <p class="text-sm md:text-base text-gray-300 leading-relaxed mb-4">
+                    복잡한 공식 없이, 일상적인 비유와 실전 활용 가이드를 통해 림버스 컴퍼니의 핵심 메커니즘을 쉽고 빠르게 파악해보세요.
+                </p>
+                <div class="flex flex-wrap gap-2 text-xs text-gray-400">
+                    <span class="bg-black/40 px-2.5 py-1 rounded-md border border-gray-800">💡 Tip: 상단의 '합/정신력 체험기'에서 직접 테스트해보세요!</span>
+                    <span class="bg-black/40 px-2.5 py-1 rounded-md border border-gray-800">⚡ 총 7가지 필수 용어 완벽 정리</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search and Filter Bar -->
+        <section class="mb-6 flex flex-col md:flex-row gap-3 justify-between items-center">
+            <!-- Search Box -->
+            <div class="relative w-full md:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="searchInput" placeholder="용어 검색 (예: 합, 정신력, 에고)..." 
+                    class="w-full bg-limbus-panel border border-limbus-border focus:border-limbus-red text-white text-sm rounded-xl pl-10 pr-4 py-2.5 outline-none transition-all placeholder-gray-500 shadow-inner">
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex flex-wrap gap-1.5 w-full md:w-auto justify-start md:justify-end">
+                <button onclick="filterCategory('all')" class="tab-btn active px-3.5 py-1.5 text-xs font-medium rounded-lg border border-limbus-border text-gray-300 transition-all">
+                    전체 보기
+                </button>
+                <button onclick="filterCategory('battle')" class="tab-btn px-3.5 py-1.5 text-xs font-medium rounded-lg border border-limbus-border text-gray-300 transition-all">
+                    ⚔️ 전투 핵심
+                </button>
+                <button onclick="filterCategory('mental')" class="tab-btn px-3.5 py-1.5 text-xs font-medium rounded-lg border border-limbus-border text-gray-300 transition-all">
+                    🧠 멘탈/상태
+                </button>
+                <button onclick="filterCategory('system')" class="tab-btn px-3.5 py-1.5 text-xs font-medium rounded-lg border border-limbus-border text-gray-300 transition-all">
+                    🧩 시스템/자원
+                </button>
+            </div>
+        </section>
+
+        <!-- Term Cards Container Grid -->
+        <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <!-- 1. 합 (Clash) -->
+            <article class="term-card limbus-card bg-limbus-cardBg border border-limbus-border rounded-2xl p-5 flex flex-col justify-between" data-category="battle" data-term="합 clash 가위바위보 맞대결">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-red-900/60 border border-red-600 text-red-400 flex items-center justify-center text-sm font-bold">01</span>
+                            <h3 class="text-xl font-black text-white">합 <span class="text-xs text-gray-400 font-normal ml-1">(Clash)</span></h3>
+                        </div>
+                        <span class="px-2.5 py-0.5 text-xs rounded-full bg-red-950 text-red-400 border border-red-800 font-medium">전투 핵심</span>
+                    </div>
+
+                    <!-- 1초 요약 -->
+                    <div class="bg-red-950/30 border-l-4 border-limbus-red p-3 rounded-r-lg mb-4">
+                        <span class="text-xs text-red-400 font-bold block mb-0.5">⚡ 한 줄 요약</span>
+                        <p class="text-sm font-semibold text-white">
+                            서로의 공격을 겨뤄 승리한 쪽만 일방적으로 타격하는 '맞대결 메커니즘'!
+                        </p>
+                    </div>
+
+                    <!-- 일상 비유 -->
+                    <div class="mb-4 space-y-2">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-mug-hot text-limbus-gold text-sm mt-1"></i>
+                            <div>
+                                <span class="text-xs text-limbus-gold font-bold">쉽게 풀어보기 (일상 비유)</span>
+                                <p class="text-sm text-gray-300 leading-relaxed">
+                                    두 사람이 동시에 주먹을 지르는 상황에서, 위력이 높은 사람이 상대의 공격을 튕겨내고 본인의 공격만 적중시키는 가위바위보 판정과 같습니다. 패배한 쪽은 공격 기회를 잃고 피해를 입습니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 게임 시스템 설명 -->
+                    <div class="mb-4 bg-black/40 p-3 rounded-xl border border-gray-800/80">
+                        <span class="text-xs text-gray-400 font-bold block mb-1">🎮 게임 내 역할</span>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            적의 공격을 내 스킬로 맞받아치는 시스템. 합에서 승리하면 적 스킬은 취소되고 내 공격만 적에게 적중합니다. 합 승률을 높이는 것이 림버스 전투의 핵심입니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 실전 활용 가이드 -->
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-limbus-border mt-2">
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-limbus-gold mb-1">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>💡 실전 활용 가이드</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-normal">
+                        적의 위력이 내 스킬보다 훨씬 높을 때는 합을 진행하지 말고 방어/수비 스킬을 사용하거나, 더 강력한 인격으로 공격 대상을 변경하는 '합 빼앗기'를 활용하여 피해를 최소화하세요.
+                    </p>
+                </div>
+            </article>
+
+            <!-- 2. 정신력 (Sanity / SP) -->
+            <article class="term-card limbus-card bg-limbus-cardBg border border-limbus-border rounded-2xl p-5 flex flex-col justify-between" data-category="mental" data-term="정신력 sp sanity 멘탈 동전 앞면">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-blue-900/60 border border-blue-600 text-blue-400 flex items-center justify-center text-sm font-bold">02</span>
+                            <h3 class="text-xl font-black text-white">정신력 <span class="text-xs text-gray-400 font-normal ml-1">(Sanity / SP)</span></h3>
+                        </div>
+                        <span class="px-2.5 py-0.5 text-xs rounded-full bg-blue-950 text-blue-400 border border-blue-800 font-medium">멘탈/상태</span>
+                    </div>
+
+                    <!-- 1초 요약 -->
+                    <div class="bg-blue-950/30 border-l-4 border-blue-500 p-3 rounded-r-lg mb-4">
+                        <span class="text-xs text-blue-400 font-bold block mb-0.5">⚡ 한 줄 요약</span>
+                        <p class="text-sm font-semibold text-white">
+                            수감자의 컨디션을 나타내는 수치 (-45 ~ +45 범위)!
+                        </p>
+                    </div>
+
+                    <!-- 일상 비유 -->
+                    <div class="mb-4 space-y-2">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-brain text-limbus-gold text-sm mt-1"></i>
+                            <div>
+                                <span class="text-xs text-limbus-gold font-bold">쉽게 풀어보기 (일상 비유)</span>
+                                <p class="text-sm text-gray-300 leading-relaxed">
+                                    집중력과 컨디션 상태에 비유할 수 있습니다. 멘탈 상태가 최고(+45)일 때는 던지는 동전마다 앞면이 나와 고득점(높은 위력)을 내지만, 바닥(-45)일 때는 제 능력을 발휘하지 못하고 붕괴하게 됩니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 게임 시스템 설명 -->
+                    <div class="mb-4 bg-black/40 p-3 rounded-xl border border-gray-800/80">
+                        <span class="text-xs text-gray-400 font-bold block mb-1">🎮 게임 내 역할</span>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            스킬의 '동전(Coin) 던지기' 앞면 확률을 결정합니다. 정신력 +45 달성 시 앞면 확률이 무려 95%가 되어 합 위력과 딜량이 대폭 상승합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 실전 활용 가이드 -->
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-limbus-border mt-2">
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-limbus-gold mb-1">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>💡 실전 활용 가이드</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-normal">
+                        전투 초반 1~2라운드 동안 승률이 높은 유리한 합을 먼저 진행하여 수감자들의 정신력을 빠르게 +45까지 올리는 것이 안정적인 전투 운용의 핵심입니다.
+                    </p>
+                </div>
+            </article>
+
+            <!-- 3. E.G.O (에고) -->
+            <article class="term-card limbus-card bg-limbus-cardBg border border-limbus-border rounded-2xl p-5 flex flex-col justify-between" data-category="battle" data-term="ego 에고 필살기 궁극기 환상체">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-amber-900/60 border border-amber-600 text-amber-400 flex items-center justify-center text-sm font-bold">03</span>
+                            <h3 class="text-xl font-black text-white">E.G.O <span class="text-xs text-gray-400 font-normal ml-1">(에고)</span></h3>
+                        </div>
+                        <span class="px-2.5 py-0.5 text-xs rounded-full bg-amber-950 text-amber-400 border border-amber-800 font-medium">전투 핵심</span>
+                    </div>
+
+                    <!-- 1초 요약 -->
+                    <div class="bg-amber-950/30 border-l-4 border-amber-500 p-3 rounded-r-lg mb-4">
+                        <span class="text-xs text-amber-400 font-bold block mb-0.5">⚡ 한 줄 요약</span>
+                        <p class="text-sm font-semibold text-white">
+                            불리한 상황을 일발 역전시킬 수 있는 수감자의 '강력한 궁극기'!
+                        </p>
+                    </div>
+
+                    <!-- 일상 비유 -->
+                    <div class="mb-4 space-y-2">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-limbus-gold text-sm mt-1"></i>
+                            <div>
+                                <span class="text-xs text-limbus-gold font-bold">쉽게 풀어보기 (일상 비유)</span>
+                                <p class="text-sm text-gray-300 leading-relaxed">
+                                    일반적인 무기를 사용하다가, 위기 상황에서 강력한 전용 특수 장비를 꺼내어 한 번에 국면을 전환하는 강력한 필살기와 같습니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 게임 시스템 설명 -->
+                    <div class="mb-4 bg-black/40 p-3 rounded-xl border border-gray-800/80">
+                        <span class="text-xs text-gray-400 font-bold block mb-1">🎮 게임 내 역할</span>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            모아둔 '죄악 자원'을 소모해 발동하는 압도적 위력의 스킬. 합 위력이 매우 높아 절대 이길 수 없는 합을 역전하거나 광역 공격을 퍼부을 때 사용합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 실전 활용 가이드 -->
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-limbus-border mt-2">
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-limbus-gold mb-1">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>💡 실전 활용 가이드</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-normal">
+                        일반 스킬로는 합 승률이 '매우 불리'할 때나 다수의 적을 한 번에 제압해야 할 때 E.G.O를 발동하세요. 높은 기본 위력 덕분에 확실한 합 승리를 보장합니다.
+                    </p>
+                </div>
+            </article>
+
+            <!-- 4. 수감자 & 인격 (Identity) -->
+            <article class="term-card limbus-card bg-limbus-cardBg border border-limbus-border rounded-2xl p-5 flex flex-col justify-between" data-category="system" data-term="수감자 인격 identity 캐릭 옷 코스튬">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-purple-900/60 border border-purple-600 text-purple-400 flex items-center justify-center text-sm font-bold">04</span>
+                            <h3 class="text-xl font-black text-white">수감자 & 인격 <span class="text-xs text-gray-400 font-normal ml-1">(Identity)</span></h3>
+                        </div>
+                        <span class="px-2.5 py-0.5 text-xs rounded-full bg-purple-950 text-purple-400 border border-purple-800 font-medium">시스템/자원</span>
+                    </div>
+
+                    <!-- 1초 요약 -->
+                    <div class="bg-purple-950/30 border-l-4 border-purple-500 p-3 rounded-r-lg mb-4">
+                        <span class="text-xs text-purple-400 font-bold block mb-0.5">⚡ 한 줄 요약</span>
+                        <p class="text-sm font-semibold text-white">
+                            수감자는 '캐릭터 본체', 인격은 '평행세계의 직업 역할군'!
+                        </p>
+                    </div>
+
+                    <!-- 일상 비유 -->
+                    <div class="mb-4 space-y-2">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-shirt text-limbus-gold text-sm mt-1"></i>
+                            <div>
+                                <span class="text-xs text-limbus-gold font-bold">쉽게 풀어보기 (일상 비유)</span>
+                                <p class="text-sm text-gray-300 leading-relaxed">
+                                    동일한 인물이 평행세계에서 검객, 해적, 의사 등 서로 다른 직업을 가진 것과 같습니다. 착용한 유니폼(인격)에 따라 사용하는 스킬과 전투 방식이 달라집니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 게임 시스템 설명 -->
+                    <div class="mb-4 bg-black/40 p-3 rounded-xl border border-gray-800/80">
+                        <span class="text-xs text-gray-400 font-bold block mb-1">🎮 게임 내 역할</span>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            수감자는 12명으로 고정되어 있지만, 어떤 인격을 장착하느냐에 따라 보유 스킬, 속성, 체력, 역할군(딜러/탱커/버퍼)이 완전히 달라집니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 실전 활용 가이드 -->
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-limbus-border mt-2">
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-limbus-gold mb-1">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>💡 실전 활용 가이드</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-normal">
+                        동일한 수감자라도 인격에 따라 공격 속성과 역할이 완전히 다릅니다. 스테이지 기믹이나 적의 약점 속성에 맞춰 인격을 교체하며 조합을 구성해야 합니다.
+                    </p>
+                </div>
+            </article>
+
+            <!-- 5. 죄악 속성 & 자원 -->
+            <article class="term-card limbus-card bg-limbus-cardBg border border-limbus-border rounded-2xl p-5 flex flex-col justify-between" data-category="system" data-term="죄악 속성 자원 색깔 분노 색욕 나태 탐욕 우울 오만 질투">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-emerald-900/60 border border-emerald-600 text-emerald-400 flex items-center justify-center text-sm font-bold">05</span>
+                            <h3 class="text-xl font-black text-white">죄악 속성 & 자원 <span class="text-xs text-gray-400 font-normal ml-1">(Affinity / Resource)</span></h3>
+                        </div>
+                        <span class="px-2.5 py-0.5 text-xs rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 font-medium">시스템/자원</span>
+                    </div>
+
+                    <!-- 1초 요약 -->
+                    <div class="bg-emerald-950/30 border-l-4 border-emerald-500 p-3 rounded-r-lg mb-4">
+                        <span class="text-xs text-emerald-400 font-bold block mb-0.5">⚡ 한 줄 요약</span>
+                        <p class="text-sm font-semibold text-white">
+                            스킬을 사용할 때마다 자동으로 획득하는 '7가지 색상의 마일리지'!
+                        </p>
+                    </div>
+
+                    <!-- 일상 비유 -->
+                    <div class="mb-4 space-y-2">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-coins text-limbus-gold text-sm mt-1"></i>
+                            <div>
+                                <span class="text-xs text-limbus-gold font-bold">쉽게 풀어보기 (일상 비유)</span>
+                                <p class="text-sm text-gray-300 leading-relaxed">
+                                    특정 색상의 스킬을 사용할 때마다 해당 색상의 쿠폰이 적립되며, 차곡차곡 모인 쿠폰으로 E.G.O(필살기)를 결제하여 사용하는 방식입니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 게임 시스템 설명 -->
+                    <div class="mb-4 bg-black/40 p-3 rounded-xl border border-gray-800/80">
+                        <span class="text-xs text-gray-400 font-bold block mb-1">🎮 게임 내 역할</span>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            스킬 사용 시 해당 속성의 죄악 자원이 1씩 증가합니다. 각 E.G.O마다 요구하는 죄악 자원 종류가 다르므로 덱을 짤 때 속성 균형이 중요합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 실전 활용 가이드 -->
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-limbus-border mt-2">
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-limbus-gold mb-1">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>💡 실전 활용 가이드</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-normal">
+                        사용하고자 하는 E.G.O의 요구 자원 색상과 인격들의 스킬 속성 색상이 일치하도록 덱을 구성해야 필요한 자원을 원활하게 수급할 수 있습니다.
+                    </p>
+                </div>
+            </article>
+
+            <!-- 6. 흐트러짐 (Stagger) -->
+            <article class="term-card limbus-card bg-limbus-cardBg border border-limbus-border rounded-2xl p-5 flex flex-col justify-between" data-category="mental" data-term="흐트러짐 stagger 그로기 무력화 데미지2배">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-orange-900/60 border border-orange-600 text-orange-400 flex items-center justify-center text-sm font-bold">06</span>
+                            <h3 class="text-xl font-black text-white">흐트러짐 <span class="text-xs text-gray-400 font-normal ml-1">(Stagger)</span></h3>
+                        </div>
+                        <span class="px-2.5 py-0.5 text-xs rounded-full bg-orange-950 text-orange-400 border border-orange-800 font-medium">전투 / 멘탈</span>
+                    </div>
+
+                    <!-- 1초 요약 -->
+                    <div class="bg-orange-950/30 border-l-4 border-orange-500 p-3 rounded-r-lg mb-4">
+                        <span class="text-xs text-orange-400 font-bold block mb-0.5">⚡ 한 줄 요약</span>
+                        <p class="text-sm font-semibold text-white">
+                            타격을 입어 방어가 풀리고 무력화된 '그로기 상태'!
+                        </p>
+                    </div>
+
+                    <!-- 일상 비유 -->
+                    <div class="mb-4 space-y-2">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-dizzy text-limbus-gold text-sm mt-1"></i>
+                            <div>
+                                <span class="text-xs text-limbus-gold font-bold">쉽게 풀어보기 (일상 비유)</span>
+                                <p class="text-sm text-gray-300 leading-relaxed">
+                                    격투기에서 강한 공격을 받고 자세가 무너져 방어를 하지 못하는 틈입니다. 이 상태에서는 공격에 노출되어 평소보다 훨씬 더 많은 피해를 입습니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 게임 시스템 설명 -->
+                    <div class="mb-4 bg-black/40 p-3 rounded-xl border border-gray-800/80">
+                        <span class="text-xs text-gray-400 font-bold block mb-1">🎮 게임 내 역할</span>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            체력바에 표시된 '흐트러짐 선'까지 HP가 깎이면 발동합니다. 흐트러진 대상은 다음 라운드 동안 행동 불가 상태가 되며 받는 피해량이 치명적으로 증가합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 실전 활용 가이드 -->
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-limbus-border mt-2">
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-limbus-gold mb-1">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>💡 실전 활용 가이드</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-normal">
+                        적의 체력 바에 위치한 실선(흐트러짐 구간)을 빠르게 깎아 무력화한 뒤 화력을 집중하는 것이 가장 효율적인 딜링 방식입니다.
+                    </p>
+                </div>
+            </article>
+
+            <!-- 7. 침식 (Corrosion) -->
+            <article class="term-card limbus-card bg-limbus-cardBg border border-limbus-border rounded-2xl p-5 flex flex-col justify-between col-span-1 md:col-span-2" data-category="mental" data-term="침식 corrosion 멘붕 미침 피아식별 아군공격 트롤">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-lg bg-rose-950 border border-rose-600 text-rose-400 flex items-center justify-center text-sm font-bold">07</span>
+                            <h3 class="text-xl font-black text-white">E.G.O 침식 <span class="text-xs text-gray-400 font-normal ml-1">(Corrosion)</span></h3>
+                        </div>
+                        <span class="px-2.5 py-0.5 text-xs rounded-full bg-rose-950 text-rose-400 border border-rose-800 font-medium">⚠️ 최상위 위험</span>
+                    </div>
+
+                    <!-- 1초 요약 -->
+                    <div class="bg-rose-950/40 border-l-4 border-rose-600 p-3 rounded-r-lg mb-4">
+                        <span class="text-xs text-rose-400 font-bold block mb-0.5">⚡ 한 줄 요약</span>
+                        <p class="text-sm font-semibold text-white">
+                            정신력이 바닥나 이성을 잃고 피아 구분 없이 폭주하는 위험 상태!
+                        </p>
+                    </div>
+
+                    <!-- 일상 비유 -->
+                    <div class="mb-4 space-y-2">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-biohazard text-limbus-gold text-sm mt-1"></i>
+                            <div>
+                                <span class="text-xs text-limbus-gold font-bold">쉽게 풀어보기 (일상 비유)</span>
+                                <p class="text-sm text-gray-300 leading-relaxed">
+                                    극심한 스트레스로 제어 불 능 상태에 빠지는 현상입니다. 피아 식별 능력이 상실되어 아군과 적군 구분 없이 무차별적인 공격을 퍼붓게 됩니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 게임 시스템 설명 -->
+                    <div class="mb-4 bg-black/40 p-3 rounded-xl border border-gray-800/80">
+                        <span class="text-xs text-gray-400 font-bold block mb-1">🎮 게임 내 역할</span>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            정신력이 -45에 도달하거나 오버클럭 E.G.O를 과도하게 사용할 때 발생합니다. 수감자가 제어 불능 상태가 되어 피아를 가리지 않고 임의의 대상을 향해 강력한 침식 스킬을 발동합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 실전 활용 가이드 -->
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-limbus-border mt-2">
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-limbus-gold mb-1">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>💡 실전 활용 가이드</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-normal">
+                        정신력이 낮아진 상태에서 E.G.O를 사용할 때는 침식이 발생해 아군을 공격할 위험이 있으므로, 정신력이 지속적으로 감소하는 특정 인격을 다룰 때는 정신력 수치 유지에 각별히 주의해야 합니다.
+                    </p>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- No results text -->
+        <div id="noResults" class="hidden text-center py-12">
+            <i class="fa-solid fa-ghost text-4xl text-gray-600 mb-3"></i>
+            <p class="text-gray-400 font-medium">검색 결과가 없습니다. 다른 용어를 입력해 보세요!</p>
+        </div>
+    </main>
+
+    <!-- 1. 합 & 정신력 체험 시뮬레이터 모달 -->
+    <div id="sim-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-limbus-panel border border-limbus-border rounded-2xl w-full max-w-xl p-5 md:p-6 shadow-2xl relative">
+            <button onclick="closeModal('sim-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 class="text-xl font-black text-white mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-dice text-limbus-gold"></i>
+                <span>실전 합 & 정신력 체감 시뮬레이터</span>
+            </h3>
+            <p class="text-xs text-gray-400 mb-5">정신력(SP)이 합 승패와 동전 앞면에 얼마나 큰 영향을 주는지 직접 테스트해 보세요!</p>
+
+            <!-- Simulator Interactive Controls -->
+            <div class="space-y-5 bg-black/40 p-4 rounded-xl border border-gray-800">
+                <!-- Sanity Slider -->
+                <div>
+                    <div class="flex justify-between items-center text-xs font-bold mb-1.5">
+                        <span class="text-gray-300">내 수감자 정신력 (SP)</span>
+                        <span id="spValueText" class="text-limbus-gold font-mono text-sm">+0 SP</span>
+                    </div>
+                    <input type="range" id="spRange" min="-45" max="45" value="0" step="1" 
+                        oninput="updateSimUI()"
+                        class="w-full accent-limbus-red cursor-pointer">
+                    <div class="flex justify-between text-[10px] text-gray-500 mt-1">
+                        <span class="text-rose-400 font-bold">-45 (멘붕/침식)</span>
+                        <span>0 (기본)</span>
+                        <span class="text-blue-400 font-bold">+45 (최상/앞면 95%)</span>
+                    </div>
+                </div>
+
+                <!-- Coin Toss Prediction Meter -->
+                <div class="bg-limbus-cardBg p-3 rounded-lg border border-gray-800 flex items-center justify-between">
+                    <span class="text-xs text-gray-300 font-semibold">동전 앞면(성공) 확률:</span>
+                    <span id="coinProbability" class="text-sm font-black text-limbus-gold font-mono">50%</span>
+                </div>
+
+                <!-- Dice Battle Visual Arena -->
+                <div class="grid grid-cols-2 gap-3 text-center pt-2">
+                    <!-- My Player -->
+                    <div class="bg-blue-950/30 border border-blue-800/60 rounded-xl p-3">
+                        <div class="text-xs font-bold text-blue-400 mb-1">내 수감자 스킬</div>
+                        <div class="text-2xl font-black text-white font-mono my-1" id="myFinalPower">?</div>
+                        <div class="text-[10px] text-gray-400" id="myCoinResult">동전 대기 중</div>
+                    </div>
+                    <!-- Enemy -->
+                    <div class="bg-red-950/30 border border-red-800/60 rounded-xl p-3">
+                        <div class="text-xs font-bold text-red-400 mb-1">적 스킬 (기본 12)</div>
+                        <div class="text-2xl font-black text-white font-mono my-1" id="enemyPower">12</div>
+                        <div class="text-[10px] text-gray-400">고정 위력</div>
+                    </div>
+                </div>
+
+                <!-- Clash Outcome Display -->
+                <div id="clashOutcome" class="text-center py-2 px-3 rounded-lg bg-neutral-900 border border-gray-800 text-xs font-bold text-gray-300">
+                    주사위 구르기 버튼을 눌러 합 결과를 확인하세요!
+                </div>
+
+                <!-- Action Roll Button -->
+                <button onclick="runClashSim()" class="w-full py-3 bg-gradient-to-r from-limbus-red to-red-800 hover:from-red-600 hover:to-red-700 text-white font-black text-sm rounded-xl transition-all shadow-lg red-glow">
+                    🎲 주사위 굴려서 합 겨루기!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 신입 관리자 자격 퀴즈 모달 -->
+    <div id="quiz-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-limbus-panel border border-limbus-border rounded-2xl w-full max-w-lg p-5 md:p-6 shadow-2xl relative">
+            <button onclick="closeModal('quiz-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-0.5 bg-limbus-gold/20 text-limbus-gold border border-limbus-gold/40 text-xs font-bold rounded">자가 테스트</span>
+                <h3 class="text-xl font-black text-white">신입 관리자 자격 퀴즈</h3>
+            </div>
+            <p class="text-xs text-gray-400 mb-4">오늘 배운 용어들을 완벽히 숙지했는지 확인해보자!</p>
+
+            <!-- Quiz Content Container -->
+            <div id="quizContainer">
+                <div class="bg-black/40 p-4 rounded-xl border border-gray-800 mb-4">
+                    <span id="quizNum" class="text-xs font-bold text-limbus-gold block mb-1">Q1.</span>
+                    <p id="quizQuestion" class="text-sm font-semibold text-white leading-snug">
+                        질문 불러오는 중...
+                    </p>
+                </div>
+
+                <!-- Choice Options -->
+                <div id="quizOptions" class="space-y-2 mb-4">
+                    <!-- Dynamic Choices loaded via JS -->
+                </div>
+
+                <div id="quizFeedback" class="hidden text-xs p-3 rounded-lg font-bold mb-3 text-center"></div>
+            </div>
+
+            <!-- Quiz Footer -->
+            <div class="flex justify-between items-center pt-2 border-t border-gray-800">
+                <span id="quizScore" class="text-xs text-gray-400 font-mono">점수: 0 / 3</span>
+                <button id="nextQuizBtn" onclick="nextQuestion()" class="hidden px-4 py-2 bg-limbus-gold hover:bg-yellow-500 text-black font-bold text-xs rounded-lg transition-all">
+                    다음 문제 <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-limbus-bg border-t border-limbus-border py-6 mt-12 text-center text-xs text-gray-500">
+        <div class="max-w-6xl mx-auto px-4 space-y-2">
+            <p class="font-semibold text-gray-400">림버스 컴퍼니 초보 관리자를 위한 비공식 가이드북</p>
+            <p class="text-[11px] text-gray-600">본 페이지는 Project Moon의 Limbus Company 팬메이드 가이드이며 모든 게임 권리는 원작사에 있습니다.</p>
+        </div>
+    </footer>
+
+    <script>
+        /* --- Audio Synthesizer via Web Audio API (No External Audio Files) --- */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playClickSound() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        /* --- Search & Filter System --- */
+        const searchInput = document.getElementById('searchInput');
+        const cards = document.querySelectorAll('.term-card');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', filterCards);
+
+        function filterCategory(category) {
+            playClickSound();
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                const matchesCat = (category === 'all' || cardCat === category);
+                const matchesSearch = card.getAttribute('data-term').toLowerCase().includes(searchInput.value.toLowerCase());
+
+                if (matchesCat && matchesSearch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            checkNoResults();
+        }
+
+        function filterCards() {
+            const query = searchInput.value.toLowerCase().trim();
+            const activeTab = document.querySelector('.tab-btn.active').getAttribute('onclick');
+            
+            cards.forEach(card => {
+                const termData = card.getAttribute('data-term').toLowerCase();
+                const matchesSearch = termData.includes(query);
+                
+                if (matchesSearch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            checkNoResults();
+        }
+
+        function checkNoResults() {
+            const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
+            if (visibleCards.length === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        /* --- Modal Control Logic --- */
+        function openModal(id) {
+            playClickSound();
+            document.getElementById(id).classList.remove('hidden');
+            if(id === 'sim-modal') updateSimUI();
+            if(id === 'quiz-modal') resetQuiz();
+        }
+
+        function closeModal(id) {
+            playClickSound();
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        /* --- 1. Clash & Sanity Simulator Logic --- */
+        function updateSimUI() {
+            const sp = parseInt(document.getElementById('spRange').value);
+            const spText = document.getElementById('spValueText');
+            const probText = document.getElementById('coinProbability');
+
+            // Sanity -45 ~ +45 translates to 5% ~ 95% coin head probability
+            // Formula in Limbus: Base 50% + (SP * 1%)
+            let probability = 50 + sp;
+            if (probability < 5) probability = 5;
+            if (probability > 95) probability = 95;
+
+            if (sp > 0) {
+                spText.textContent = `+${sp} SP (최상)`;
+                spText.className = "text-blue-400 font-mono text-sm font-bold";
+            } else if (sp < 0) {
+                spText.textContent = `${sp} SP (위험)`;
+                spText.className = "text-rose-500 font-mono text-sm font-bold";
+            } else {
+                spText.textContent = `0 SP (보통)`;
+                spText.className = "text-limbus-gold font-mono text-sm font-bold";
+            }
+
+            probText.textContent = `${probability}%`;
+        }
+
+        function runClashSim() {
+            playClickSound();
+            const sp = parseInt(document.getElementById('spRange').value);
+            let probability = (50 + sp) / 100;
+            if (probability < 0.05) probability = 0.05;
+            if (probability > 0.95) probability = 0.95;
+
+            // Base Power = 6, Coin Power = +10 if Head
+            const basePower = 6;
+            const coinValue = 10;
+            const isHead = Math.random() < probability;
+
+            const finalPower = isHead ? (basePower + coinValue) : basePower;
+            const enemyPower = 12;
+
+            document.getElementById('myFinalPower').textContent = finalPower;
+            document.getElementById('myCoinResult').textContent = isHead ? "🪙 동전 [앞면] 성공! (+10)" : "🪙 동전 [뒷면] 실패 (+0)";
+            document.getElementById('myCoinResult').className = isHead ? "text-[11px] text-emerald-400 font-bold" : "text-[11px] text-rose-400 font-bold";
+
+            const outcomeEl = document.getElementById('clashOutcome');
+            if (finalPower > enemyPower) {
+                outcomeEl.textContent = `🎉 합 승리! (내 위력 ${finalPower} > 적 위력 ${enemyPower}) -> 적 공격 취소 & 일방 타격!`;
+                outcomeEl.className = "text-center py-2 px-3 rounded-lg bg-emerald-950/80 border border-emerald-600 text-xs font-bold text-emerald-300";
+            } else if (finalPower < enemyPower) {
+                outcomeEl.textContent = `💥 합 패배! (내 위력 ${finalPower} < 적 위력 ${enemyPower}) -> 내 공격 취소되고 개처맞음!`;
+                outcomeEl.className = "text-center py-2 px-3 rounded-lg bg-rose-950/80 border border-rose-600 text-xs font-bold text-rose-300";
+            } else {
+                outcomeEl.textContent = `⚔️ 무승부! (위력 같음) -> 주사위 다시 구름!`;
+                outcomeEl.className = "text-center py-2 px-3 rounded-lg bg-yellow-950/80 border border-yellow-600 text-xs font-bold text-yellow-300";
+            }
+        }
+
+        /* --- 2. Quiz System Logic --- */
+        const quizData = [
+            {
+                q: "림버스 컴퍼니 전투의 핵심인 '합(Clash)'에서 패배한 수감자는 어떻게 될까요?",
+                options: [
+                    "상대방 공격을 완전히 가드한다.",
+                    "내 공격이 취소되고 일방적으로 처맞는다.",
+                    "즉시 필살기(E.G.O)가 자동으로 발동된다.",
+                    "아군 전체의 체력이 회복된다."
+                ],
+                correct: 1,
+                explanation: "정답! 합에서 진 사람은 공격 기회를 잃고 샌드백처럼 때리는 대로 맞아야 합니다!"
+            },
+            {
+                q: "정신력(SP)이 최고의 상태인 +45에 도달했을 때의 이점은 무엇일까요?",
+                options: [
+                    "동전 던지기 앞면(성공) 확률이 95%가 된다.",
+                    "수감자가 즉시 미쳐서 아군을 공격한다.",
+                    "체력이 매 라운드 100% 회복된다.",
+                    "합을 대지 않고 적을 바로 처치한다."
+                ],
+                correct: 0,
+                explanation: "정답! 정신력 45를 찍으면 동전 앞면 확률이 95%가 되어 엄청난 합 위력과 딜을 꽂을 수 있습니다!"
+            },
+            {
+                q: "정신력이 -45 바닥까지 떨어졌을 때 발생하는 위험한 상태는 무엇일까요?",
+                options: [
+                    "흐트러짐 (Stagger)",
+                    "E.G.O 침식 (Corrosion)",
+                    "부활 (Resurrection)",
+                    "속성 자원 2배 적립"
+                ],
+                correct: 1,
+                explanation: "정답! 정신력이 -45가 되면 이성을 잃고 피아식별 없이 아군까지 때려부수는 '침식' 상태가 됩니다!"
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+
+        function resetQuiz() {
+            currentQIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = quizData[currentQIndex];
+            document.getElementById('quizNum').textContent = `질문 ${currentQIndex + 1} / ${quizData.length}`;
+            document.getElementById('quizQuestion').textContent = q.q;
+            document.getElementById('quizScore').textContent = `점수: ${score} / ${quizData.length}`;
+            document.getElementById('quizFeedback').classList.add('hidden');
+            document.getElementById('nextQuizBtn').classList.add('hidden');
+
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-xl bg-limbus-cardBg border border-limbus-border hover:border-limbus-gold text-xs text-gray-200 transition-all flex items-center justify-between";
+                btn.innerHTML = `<span>${idx + 1}. ${opt}</span> <i class="fa-regular fa-circle text-gray-600"></i>`;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIdx, btnEl) {
+            playClickSound();
+            const q = quizData[currentQIndex];
+            const feedbackEl = document.getElementById('quizFeedback');
+            const allBtns = document.querySelectorAll('#quizOptions button');
+
+            // Disable all buttons after selection
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selectedIdx === q.correct) {
+                score++;
+                btnEl.classList.add('border-emerald-500', 'bg-emerald-950/40');
+                feedbackEl.textContent = `⭕ ${q.explanation}`;
+                feedbackEl.className = "text-xs p-3 rounded-lg font-bold mb-3 text-center bg-emerald-950/80 text-emerald-300 border border-emerald-600 block";
+            } else {
+                btnEl.classList.add('border-rose-500', 'bg-rose-950/40');
+                feedbackEl.textContent = `❌ 틀렸습니다! ${q.explanation}`;
+                feedbackEl.className = "text-xs p-3 rounded-lg font-bold mb-3 text-center bg-rose-950/80 text-rose-300 border border-rose-600 block";
+            }
+
+            document.getElementById('quizScore').textContent = `점수: ${score} / ${quizData.length}`;
+            document.getElementById('nextQuizBtn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playClickSound();
+            currentQIndex++;
+            if (currentQIndex < quizData.length) {
+                showQuestion();
+            } else {
+                // Quiz Finish
+                document.getElementById('quizQuestion').textContent = `🎉 축하합니다! 퀴즈를 모두 완료했습니다! (최종 점수: ${score} / ${quizData.length})`;
+                document.getElementById('quizOptions').innerHTML = `
+                    <div class="text-center py-6">
+                        <p class="text-sm font-bold text-limbus-gold mb-2">이제 당신도 당당한 버스 관리자!</p>
+                        <p class="text-xs text-gray-400">수감자들과 함께 거울 던전으로 떠날 준비가 되셨습니다.</p>
+                    </div>
+                `;
+                document.getElementById('quizFeedback').classList.add('hidden');
+                document.getElementById('nextQuizBtn').classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
